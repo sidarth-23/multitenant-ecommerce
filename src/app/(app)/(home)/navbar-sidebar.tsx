@@ -10,6 +10,8 @@ import { ScrollArea } from "@/components/ui/scroll-area";
 import Link from "next/link";
 import { cn } from "@/lib/utils";
 import { usePathname } from "next/navigation";
+import { useMediaQuery } from "usehooks-ts";
+import { useEffect } from "react";
 
 interface NavbarItemProps {
   href: string;
@@ -23,7 +25,14 @@ interface Props {
 }
 
 export const NavbarSidebar = ({ items, open, onOpenChange }: Props) => {
-  const pathname = usePathname()
+  const pathname = usePathname();
+  const isLargeDevice = useMediaQuery("(min-width : 993px)");
+
+  useEffect(() => {
+    if (isLargeDevice) {
+      onOpenChange(false);
+    }
+  }, [isLargeDevice, onOpenChange]);
   return (
     <Sheet open={open} onOpenChange={onOpenChange}>
       <SheetContent side="left" className="transition-none p-0">
