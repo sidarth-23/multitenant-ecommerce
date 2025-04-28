@@ -2,13 +2,14 @@
 
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
-import { Category } from "@/payload-types";
 import { useRef, useState } from "react";
 import { useDropdownPosition } from "./use-dropdown-position";
 import { SubCategoryMenu } from "./sub-category";
+import { CustomCategory } from "../types";
+import Link from "next/link";
 
 interface Props {
-  category: Category;
+  category: CustomCategory;
   isActive?: boolean;
   isNavigationHovered?: boolean;
 }
@@ -29,8 +30,6 @@ export const CategoryDropdown = ({
     }
   };
 
-  console.log(dropdownPosition)
-
   const onMouseLeave = () => setIsOpen(false);
   return (
     <div
@@ -40,14 +39,19 @@ export const CategoryDropdown = ({
       onMouseLeave={onMouseLeave}>
       <div className="relative">
         <Button
+          asChild
           variant={"reverse"}
           className={cn(
             "h-11 px-4 bg-transparent border-transparent rounded-full hover:bg-white hover:text-black hover:border-primary",
             isActive &&
               !isNavigationHovered &&
-              "bg-white text-black border-primary"
+              "bg-white text-black border-primary",
+            isOpen &&
+              "bg-white border-primary shadow-shadow translate-x-reverseBoxShadowX translate-y-reverseBoxShadowY"
           )}>
-          {category.name}
+          <Link href={`/${category.slug === "all" ? "/" : category.slug}`}>
+            {category.name}
+          </Link>
         </Button>
         {category.subcategories && category.subcategories.length > 0 && (
           <div
@@ -58,7 +62,11 @@ export const CategoryDropdown = ({
           />
         )}
       </div>
-      <SubCategoryMenu category={category} isOpen={isOpen} position={dropdownPosition}/>
+      <SubCategoryMenu
+        category={category}
+        isOpen={isOpen}
+        position={dropdownPosition}
+      />
     </div>
   );
 };
